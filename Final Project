@@ -1,0 +1,22 @@
+import random
+words_list = ["happy", "crooked", "mischevious", "alarmed", "tree"]
+print("WELCOME TO HANGMAN\nthe rules are simple...\nsimply guess a letter!\nYou have 7 wrong tries\n")
+hang_word = random.choice(words_list)
+print(hang_word)
+
+spaces = list("_" * len(hang_word))
+wrong_tries = 0
+compare_list = list(hang_word)
+
+while wrong_tries < 7 and spaces != compare_list:
+    user_guess = input("What is your guess?: ").lower()
+    
+    if user_guess in hang_word:
+        for index, letter in enumerate(hang_word):
+            if user_guess == letter:
+                spaces[index] = letter
+    else:
+        wrong_tries += 1
+    print("Wrong Tries: " + str(wrong_tries))
+    print(" ".join(spaces))
+print("Thank you for playing!")
