@@ -1,0 +1,154 @@
+# drawMan function shows different configuration of the hangman for each wrong guess
+def drawMan():
+    if wrong_tries >= 7:
+        print("   _______")
+        print("|/      |")
+        print("|      (_)")
+        print("|      \|/")
+        print("|       |")
+        print("|      / \\")
+        print("|")
+        print("|___")
+        print("You're dead.")
+    elif wrong_tries == 6:
+        print("   _______")
+        print("|/      |")
+        print("|      (_)")
+        print("|      \|/")
+        print("|       |")
+        print("|      / ")
+        print("|")
+        print("|___")
+    elif wrong_tries == 5:
+        print("   _______")
+        print("|/      |")
+        print("|      (_)")
+        print("|      \|/")
+        print("|       |")
+        print("|")
+        print("|")
+        print("|___")
+    elif wrong_tries == 4:
+        print("   _______")
+        print("|/      |")
+        print("|      (_)")
+        print("|      \|/")
+        print("|")
+        print("|")
+        print("|")
+        print("|___")
+    elif wrong_tries == 3:
+        print("   _______")
+        print("|/      |")
+        print("|      (_)")
+        print("|      \|")
+        print("|")
+        print("|")
+        print("|")
+        print("|___")
+    elif wrong_tries == 2:
+        print("   _______")
+        print("|/      |")
+        print("|      (_)")
+        print("|")
+        print("|")
+        print("|")
+        print("|")
+        print("|___")
+    elif wrong_tries == 1:
+        print("   _______")
+        print("|/      |")
+        print("|")
+        print("|")
+        print("|")
+        print("|")
+        print("|")
+        print("|___")
+    elif wrong_tries == 0:
+        print("   _______")
+        print("|/")
+        print("|")
+        print("|")
+        print("|")
+        print("|")
+        print("|")
+        print("|___")
+
+game_number = 1
+def level_picker(game_number):
+    import random
+    easy = ["happy", "crooked", "artistic" , "alarmed", "tree", "messy", "tired"]
+    medium = ["longer", "misshapen", "murderous", "vertical","mischevious", "heartfelt", "iridescent"]
+    hard = [ "antidisestablishmentarianism", "supercalifragilisticexpialidocious", "incomprehensible", "xylophone", "trichotillomania"]
+    if game_number == 1:
+        return random.choice(easy)
+    if game_number == 2:
+        return random.choice(medium)
+    if game_number == 3:
+        return random.choice(hard)
+
+
+#Every guessed word increases the user score
+#While user answers "Y" to play again, the game will restart with a new word
+user_score = 0
+user_guess = None
+#play again and next_level start as yes
+play_again = "y"
+next_level = "y"
+while play_again == "y":
+    while next_level == "y" and game_number < 4:
+        #import a random word
+        hang_word = level_picker(game_number)
+        # Welcome sequence
+        print("*" * 24)
+        print("WELCOME TO HANGMAN***\nthe rules are simple...\nsimply guess a letter!\ninput '*' to quit" )
+        print("*" * 24)
+        print(f"LEVEL {game_number}")
+        #Set spaces list to a list of all dashes for every letter in the random word (aka hang_word)
+        spaces = list("_" * len(hang_word))
+        wrong_tries = 0
+        #compare_list is created to compare to the spaces list so the game can determine if the user correctly guessed the word
+        compare_list = list(hang_word)
+        guess_list =[]
+        print(f"\nYour Score:{user_score}")
+        #Game will end when the full hangman is drawn(after 7 tries) or if the user guesses the word
+        while wrong_tries < 7 and compare_list != spaces and user_guess != "*":
+            user_guess = input(("What is your guess?: ")).lower()
+            while user_guess not in "abcdefghijklmnopqrstuvwxyz*":
+                print("Please input a valid letter")
+                user_guess = input("What is your guess?: ")
+            if user_guess == "*":
+                print("YOU GAVE UP, but you can still try the next level")
+                user_guess = None
+                break
+            guess_list.append(user_guess)
+            #Actual game logic
+            #Enumerate will link indexes in word to letters
+            #As the program iterates through the loop, if the user guess is in the hang_word, the dashed lines will be replaced with the guessed letter
+            if user_guess in hang_word:
+                for index, letter in enumerate(hang_word):
+                    if user_guess == letter:
+                        spaces[index] = letter
+            else:
+                wrong_tries += 1
+            print(f"Wrong Tries: {wrong_tries}")
+            #Join spaces to convert it from a list
+            print(" ".join(spaces))
+            print(drawMan())
+            print(f"Letters you've guessed: {guess_list}")
+        #Determines if user guessed word
+        if compare_list == spaces:
+            print("CONGRATS YOU GOT IT!")
+            user_score += 1
+        if game_number < 3:
+            next_level = (input("Would you like to play the next level (Y/N)?")).lower()
+        wrong_tries = 0
+        compare_list = []
+        guess_list = []
+        game_number += 1
+    play_again = (input("Would you like to play again (Y/N)?")).lower()
+    if play_again == "y":
+        game_number = 1
+    elif play_again == "n":
+        print("**********THANK YOU FOR PLAYING, YOU FINISHED THE GAME**********")
+        print(f"************************\nYour Final Score is: {user_score}")
